@@ -1,18 +1,18 @@
 package main
 
 import (
-	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/danesparza/plex2slack/data"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
@@ -46,6 +46,11 @@ func main() {
 	r.HandleFunc("/plex", func(w http.ResponseWriter, req *http.Request) {
 
 		readForm, err := req.MultipartReader()
+		if err != nil {
+			log.Printf("There was a problem reading the data: %v", err)
+			return
+		}
+
 		for {
 			part, errPart := readForm.NextPart()
 			if errPart == io.EOF {
@@ -58,20 +63,14 @@ func main() {
 					fmt.Printf("Error saving thumbnail: %v\n", err)
 				}
 			} else if part.FormName() == "payload" {
-				buf := new(bytes.Buffer)
-				buf.ReadFrom(part)
-				log.Println("payload is: ", buf.String())
+				partBytes, _ := ioutil.ReadAll(part)
+				msg := data.PlexMessage{}
+				if err := json.Unmarshal(partBytes, &msg); err != nil {
+					panic(err)
+				}
+				log.Printf("Event: %v / Title: %v \n", msg.Event, msg.Metadata.Title)
 			}
 		}
-
-		// Dump the request.
-		requestDump, err := httputil.DumpRequest(req, true)
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println("\n*** BEGIN ***")
-		fmt.Println(string(requestDump))
-		fmt.Println("*** END ***")
 
 		fmt.Fprintf(w, "hello\n")
 	})
