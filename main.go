@@ -90,7 +90,7 @@ func main() {
 							Blocks: []data.SlackBlock{
 								data.SlackBlock{
 									Type: "section",
-									Text: data.SlackText{
+									Text: &data.SlackText{
 										Text: fmt.Sprintf("*%v*", msg.Metadata.Title),
 										Type: "mrkdwn",
 									},
@@ -117,7 +117,7 @@ func main() {
 							Blocks: []data.SlackBlock{
 								data.SlackBlock{
 									Type: "section",
-									Text: data.SlackText{
+									Text: &data.SlackText{
 										Text: fmt.Sprintf("New episode of *%v %v*: _%v_", msg.Metadata.GrandparentTitle, msg.Metadata.ParentTitle, msg.Metadata.Title),
 										Type: "mrkdwn",
 									},

@@ -57,8 +57,8 @@ type PlexMessage struct {
 
 // SlackRequestBody defines the message type to pass to a Slack Webhook (to post to a channel)
 type SlackRequestBody struct {
-	Text   string       `json:"text"`
-	Blocks []SlackBlock `json:"blocks"`
+	Text   string       `json:"text,omitempty"`
+	Blocks []SlackBlock `json:"blocks,omitempty"`
 }
 
 // SlackBlock defines a Slack block
@@ -67,7 +67,7 @@ type SlackBlock struct {
 	Type string `json:"type"`
 
 	// Text defines the text to send with the section type
-	Text SlackText `json:"text,omitempty"`
+	Text *SlackText `json:"text,omitempty"`
 
 	// Elements defines the elements to use with the context type
 	Elements []SlackElement `json:"elements,omitempty"`
