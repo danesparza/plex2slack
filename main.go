@@ -87,6 +87,7 @@ func main() {
 					//	Movie
 					if msg.Metadata.Type == "movie" {
 						slackMsg = data.SlackRequestBody{
+							Text: fmt.Sprintf("%v added to Movies", msg.Metadata.Title),
 							Blocks: []data.SlackBlock{
 								data.SlackBlock{
 									Type: "section",
@@ -114,6 +115,7 @@ func main() {
 					//	TV show
 					if msg.Metadata.Type == "episode" {
 						slackMsg = data.SlackRequestBody{
+							Text: fmt.Sprintf("%v %v: %v added to TV shows", msg.Metadata.GrandparentTitle, msg.Metadata.ParentTitle, msg.Metadata.Title),
 							Blocks: []data.SlackBlock{
 								data.SlackBlock{
 									Type: "section",
